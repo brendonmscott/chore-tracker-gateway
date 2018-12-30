@@ -1,0 +1,48 @@
+info:
+  component: Edge Server
+
+spring:
+  application:
+    name: gateway-server
+  http:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+zuul:
+    routes:
+        tracker:
+            path: /chore-tracker/**
+            serviceId: chore-tracker-service
+            sensitive-headers: Cookie,Set-Cookie
+        tracker-ui:
+            path: /chore-tracker-ui/**
+            serviceId: chore-tracker-ui
+
+ribbon:
+    ReadTimeout: 10000
+    eureka:
+      enabled: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://chore-tracker-discovery:8761/eureka/
+    registerWithEureka: false
+    fetch-registry: true
+
+server:
+  port: 8765
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web: DEBUG
